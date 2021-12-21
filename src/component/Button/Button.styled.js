@@ -1,6 +1,6 @@
 import styled from "@emotion/styled";
 
- const ButtonStyled = styled.button`
+export const ButtonStyled = styled.button`
 
 margin: 0 auto;
   margin-top: 20px;
@@ -31,4 +31,10 @@ margin: 0 auto;
 
 `;
 
-export default ButtonStyled;
+export const ButtonContainer = styled.div`
+display: flex;
+justify-content: center;
+
+margin-bottom: 12px;
+`;
+

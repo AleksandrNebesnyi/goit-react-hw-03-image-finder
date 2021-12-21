@@ -1,12 +1,16 @@
 import propTypes from "prop-types";
-import ButtonStyled from './Button.styled'
+import {ButtonStyled, ButtonContainer} from './Button.styled'
 
 function Button (props) {
   return (
-    <ButtonStyled 
+    <ButtonContainer>
+
+<ButtonStyled 
     onClick={props.onClick}>
       load more
     </ButtonStyled>
+    </ButtonContainer>
+   
   );
 }
 

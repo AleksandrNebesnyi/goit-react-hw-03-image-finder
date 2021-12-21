@@ -7,7 +7,8 @@ import ImageGallery from "./component/ImageGallery/ImageGalery";
 import Modal from './component/Modal/Modal';
 import Loader from "./component/Loader/Loader";
 import Button from "./component/Button/Button";
-// import fetchImages from "./api/pixabay-api.jsx";
+import { toast } from 'react-toastify'
+import 'react-toastify/dist/ReactToastify.css';
 
 
 
@@ -52,11 +53,11 @@ handleOnSubmit = searchQuery => {
    this.setState({
     isLoading: true,
     });
-
     try {
      const  hits  = await fetchPixabayImages(searchQuery , currentPage).then(( data ) => data.hits);
-     console.log(hits);
-
+    //  console.log(hits);
+ 
+  
  this.setState(prevState => ({
  images: [...prevState.images, ...hits],
        currentPage: prevState.currentPage + 1,
@@ -90,11 +91,7 @@ handleOnSubmit = searchQuery => {
     }));
   };
    
- 
-
-
-
-  
+   
    // Получает полное изображение, пишет его в стейт и открывает модалку
   handleGalleryItem = fullImageUrl => {
      this.setState({
@@ -102,32 +99,39 @@ handleOnSubmit = searchQuery => {
       showModal: true,
      });
    };
-
+   
 
 
 
 render(){
 
+  const { images, isLoading, showModal, largeImage, error } = this.state;
+  
+  const notify = () => toast.error("Wow so easy !");
 return(
+
+
   <Container>
     <Searchbar onSubmit={this.handleOnSubmit}/>
-    <ImageGallery images={this.state.images} onImageClick={this.handleGalleryItem} />
-    {this.state.isLoading && <Button onClick={this.getImages} />}
+    <ImageGallery images={images} onImageClick={this.handleGalleryItem} />
+    {isLoading && <Button onClick={this.getImages} />}
 
-    {this.state.showModal && (
+    {showModal && (
          <Modal
           onClose={this.toggleModal}>
-            <img src={this.state.largeImage} alt="" className="Modal-image" />
-          
-                        
+            <img src={largeImage} alt="" className="Modal-image" />
+                            
            </Modal>  
                   )}
 
+    {isLoading && <Loader />}
 
 
-
-
- {/* <Loader/> */}
+    {error && (
+      <div>
+      notify();
+       </div>
+        )}
    
     <ToastContainer autoClose={3000} />
 
@@ -135,11 +139,5 @@ return(
 )
 } 
 }
-
-
-
-
-
-
 
 export default App;
