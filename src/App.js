@@ -12,6 +12,15 @@ import 'react-toastify/dist/ReactToastify.css';
 
 
 
+
+
+const Status = {
+  IDLE: 'idle',
+  PENDING: 'pending',
+  RESOLVED: 'resolved',
+  REJECTED: 'rejected',
+};
+
 class App extends Component {
   state ={
     searchQuery :"",
@@ -21,6 +30,7 @@ class App extends Component {
     error: null,
     showModal: false,
     largeImage: '',
+    status: Status.IDLE,
 
 
   }
@@ -30,11 +40,12 @@ class App extends Component {
 // Если при обновлении запрос не равен между стейтами, тогда делаем фетч
   componentDidUpdate(prevProps, prevState) {
     if (prevState.searchQuery !== this.state.searchQuery) {
+       this.setState({ status: Status.PENDING });
        this.getImages();
      }
    }
 
-
+// Принимаем с формы запрос и пишем в стейт + сбрасываем после отправки значения из стейта
 handleOnSubmit = searchQuery => {
     
   this.setState({
@@ -48,27 +59,33 @@ handleOnSubmit = searchQuery => {
 
 // Получаем дату из фетча
   getImages = async () => {
-   const { currentPage, searchQuery } = this.state;
+   const { currentPage, searchQuery,isLoading } = this.state;
 
    this.setState({
     isLoading: true,
     });
+
+    
     try {
      const  hits  = await fetchPixabayImages(searchQuery , currentPage).then(( data ) => data.hits);
     //  console.log(hits);
  
   
  this.setState(prevState => ({
- images: [...prevState.images, ...hits],
-       currentPage: prevState.currentPage + 1,
+        images: [...prevState.images, ...hits],
+        currentPage: prevState.currentPage + 1,
+        status: Status.RESOLVED,
       }));
 
      if (currentPage !== 1) {
        this.scrollOnLoadButton();
       }
     } catch (error) {
-      console.log('Smth wrong with App fetch', error);
-       this.setState({ error });
+      toast.error ('Smth wrong with App fetch');
+      
+       this.setState({ 
+         error,
+         status: Status.REJECTED });
      } finally {
        this.setState({
          isLoading: false,
@@ -106,12 +123,38 @@ handleOnSubmit = searchQuery => {
 render(){
 
   const { images, isLoading, showModal, largeImage, error } = this.state;
-  
-  const notify = () => toast.error("Wow so easy !");
+   
 return(
 
 
   <Container>
+{/* 
+      if (status === 'idle') {
+      return <Searchbar onSubmit={this.handleOnSubmit}/>;
+    }
+
+    if (status === 'pendind') {
+      return  <Loader />
+    }
+
+    if (status === ''rejected'') {
+      return <Error message={error.message} />;
+    }
+     if (status === 'resolved') {
+      return {
+        <ImageGallery images={images} onImageClick={this.handleGalleryItem} />;
+        <Modal
+          onClose={this.toggleModal}>
+            <img src={largeImage} alt="" className="Modal-image" />
+                            
+           </Modal>   
+           <Button onClick={this.getImages} />   
+    
+    };
+    } */}
+
+
+
     <Searchbar onSubmit={this.handleOnSubmit}/>
     <ImageGallery images={images} onImageClick={this.handleGalleryItem} />
     {isLoading && <Button onClick={this.getImages} />}
@@ -127,11 +170,7 @@ return(
     {isLoading && <Loader />}
 
 
-    {error && (
-      <div>
-      notify();
-       </div>
-        )}
+    
    
     <ToastContainer autoClose={3000} />
 
