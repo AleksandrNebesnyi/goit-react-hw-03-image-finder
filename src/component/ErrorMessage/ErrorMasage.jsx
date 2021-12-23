@@ -1,18 +1,17 @@
 import PropTypes from 'prop-types';
-import Message from './ErrorMassage.styled'
+import {Message} from './ErrorMassage.styled'
 
 
-
-const ErrorMessage = ({ children }) => (
-    <Message> {children}</Message>
+function ErrorMessage({ message }) {
+  return (
+    <Message role="alert">
+      <p>{message}</p>
+    </Message>
   );
-  
-  ErrorMessage.defaultProps = {
-    children: [],
-  };
-  
-  ErrorMessage.propTypes = {
-    children: PropTypes.node,
-  };
-  
-  export default ErrorMessage;
+}
+
+ErrorMessage.propTypes ={
+  message : PropTypes.string,
+}
+ 
+export default ErrorMessage;

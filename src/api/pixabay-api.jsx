@@ -1,5 +1,5 @@
 const API_KEY = "23744407-6e41977eb223c860dbad454a0";
-const BASE_URL = "https://pixabay.com/api/"
+const BASE_URL = "https://pixabay.com/api/4"
  
 
  function fetchPixabayImages (searchQuery,currentPage) {
@@ -8,7 +8,7 @@ return fetch(`${BASE_URL}?q=${searchQuery}&page=${currentPage}&key=${API_KEY}&im
     if(response.ok) {
         return response.json();
     }
-    return Promise.reject(new Error(`Нет картинки ${searchQuery}`));
+    return Promise.reject(new Error(`Ошибка запроса попробуйте позже`));
 })
 }
 

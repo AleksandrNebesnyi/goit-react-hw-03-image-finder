@@ -7,6 +7,7 @@ import ImageGallery from "./component/ImageGallery/ImageGalery";
 import Modal from './component/Modal/Modal';
 import Loader from "./component/Loader/Loader";
 import Button from "./component/Button/Button";
+import ErrorMessage from "./component/ErrorMessage/ErrorMasage";
 import { toast } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css';
 
@@ -59,7 +60,7 @@ handleOnSubmit = searchQuery => {
 
 // Получаем дату из фетча
   getImages = async () => {
-   const { currentPage, searchQuery,isLoading } = this.state;
+   const { currentPage, searchQuery } = this.state;
 
    this.setState({
     isLoading: true,
@@ -68,7 +69,11 @@ handleOnSubmit = searchQuery => {
     
     try {
      const  hits  = await fetchPixabayImages(searchQuery , currentPage).then(( data ) => data.hits);
-    //  console.log(hits);
+
+     if ( hits.length === 0) {
+       toast.info('Введите валидний запрос')
+     }
+     console.log(hits);
  
   
  this.setState(prevState => ({
@@ -81,11 +86,13 @@ handleOnSubmit = searchQuery => {
        this.scrollOnLoadButton();
       }
     } catch (error) {
+      console.log(error);
       toast.error ('Smth wrong with App fetch');
       
        this.setState({ 
          error,
          status: Status.REJECTED });
+         console.log(this.state);
      } finally {
        this.setState({
          isLoading: false,
@@ -154,24 +161,27 @@ return(
     } */}
 
 
-
     <Searchbar onSubmit={this.handleOnSubmit}/>
     <ImageGallery images={images} onImageClick={this.handleGalleryItem} />
-    {isLoading && <Button onClick={this.getImages} />}
+    {!isLoading && images.length >= 12&& <Button onClick={this.getImages} />}
 
     {showModal && (
          <Modal
           onClose={this.toggleModal}>
             <img src={largeImage} alt="" className="Modal-image" />
                             
-           </Modal>  
-                  )}
+          </Modal>  
+     )}
 
     {isLoading && <Loader />}
+    {error && (
+         <ErrorMessage message={error.message} />
+         
+         
+                 )}
 
 
-    
-   
+      
     <ToastContainer autoClose={3000} />
 
   </Container>
