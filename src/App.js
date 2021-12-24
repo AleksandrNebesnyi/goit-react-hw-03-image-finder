@@ -7,7 +7,7 @@ import ImageGallery from "./component/ImageGallery/ImageGalery";
 import Modal from './component/Modal/Modal';
 import Loader from "./component/Loader/Loader";
 import Button from "./component/Button/Button";
-import ErrorMessage from "./component/ErrorMessage/ErrorMasage";
+// import ErrorMessage from "./component/ErrorMessage/ErrorMasage";
 import { toast } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css';
 
@@ -73,7 +73,7 @@ handleOnSubmit = searchQuery => {
      if ( hits.length === 0) {
        toast.info('Введите валидний запрос')
      }
-     console.log(hits);
+    //  console.log(hits);
  
   
  this.setState(prevState => ({
@@ -86,13 +86,22 @@ handleOnSubmit = searchQuery => {
        this.scrollOnLoadButton();
       }
     } catch (error) {
-      console.log(error);
-      toast.error ('Smth wrong with App fetch');
-      
+            // console.log(error);
+        
        this.setState({ 
          error,
          status: Status.REJECTED });
-         console.log(this.state);
+        
+        toast.error(`${error}`,{
+          position: "top-center",
+          autoClose: 3000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+         
+          })
      } finally {
        this.setState({
          isLoading: false,
@@ -162,7 +171,9 @@ return(
 
 
     <Searchbar onSubmit={this.handleOnSubmit}/>
+
     <ImageGallery images={images} onImageClick={this.handleGalleryItem} />
+
     {!isLoading && images.length >= 12&& <Button onClick={this.getImages} />}
 
     {showModal && (
@@ -174,14 +185,12 @@ return(
      )}
 
     {isLoading && <Loader />}
-    {error && (
+    {/* {error && (
          <ErrorMessage message={error.message} />
          
          
-                 )}
-
-
-      
+                 )} */}
+    
     <ToastContainer autoClose={3000} />
 
   </Container>

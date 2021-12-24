@@ -5,7 +5,7 @@ import {List } from './ImageGalery.styled'
 const ImageGallery = ({ images, onImageClick }) => (
   <List >
     {images.map(image => {
-      return (
+           return (
         <ImageGalleryItem
           key={image.id}
           image={image}
