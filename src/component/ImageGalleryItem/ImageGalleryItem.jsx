@@ -1,23 +1,18 @@
 import PropTypes from 'prop-types';
-import {Item, Img } from './ImageGalleryItem.styled'
+import { Item, Img } from './ImageGalleryItem.styled';
 
 const ImageGalleryItem = ({ image, onImageClick }) => {
-  const fullImage = () => onImageClick(image.largeImageURL);
+  const setFullImage = () => onImageClick(image.largeImageURL);
 
   return (
     <Item>
-      <Img
-        src={image.webformatURL}
-        alt={image.tags}
-        onClick={fullImage}
-      />
+      <Img src={image.webformatURL} alt={image.tags} onClick={setFullImage} />
     </Item>
   );
 };
 
-
 ImageGalleryItem.propTypes = {
-    image: PropTypes.shape({
+  image: PropTypes.shape({
     webformatURL: PropTypes.string.isRequired,
     largeImageURL: PropTypes.string.isRequired,
     tags: PropTypes.string,
