@@ -77,16 +77,6 @@ class App extends Component {
       this.setState({
         error,
       });
-
-      toast.error(`${error}`, {
-        position: 'top-center',
-        autoClose: 3000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-      });
     } finally {
       this.setState({
         isLoading: false,
